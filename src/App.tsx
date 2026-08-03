@@ -1,0 +1,13 @@
+import { Outlet } from 'react-router-dom';
+
+import RootLayout from '@/components/layout/RootLayout';
+
+function App() {
+  return (
+    <RootLayout>
+      <Outlet />
+    </RootLayout>
+  );
+}
+
+export default App;

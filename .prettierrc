@@ -4,6 +4,13 @@
   "singleQuote": true,
   "printWidth": 80,
   "tabWidth": 2,
-  "useTabs": true,
-  "plugins": ["prettier-plugin-tailwindcss"]
+  "useTabs": false,
+  "plugins": [
+    "prettier-plugin-tailwindcss",
+    "@trivago/prettier-plugin-sort-imports"
+  ],
+  "tailwindFunctions": ["clsx", "cn", "cva", "twMerge"],
+  "importOrder": ["^@/(.*)$", "^[a-zA-Z0-9@./-]+$", "^[./]"],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
 }
