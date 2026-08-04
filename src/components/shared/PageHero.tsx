@@ -1,14 +1,21 @@
-type PageHeroProps = {
+interface PageHeroProps {
   title: string;
-  description: string;
-};
+  subtitle?: string;
+  description?: string;
+}
 
-function PageHero({ title, description }: PageHeroProps) {
+export function PageHero({ title, subtitle, description }: PageHeroProps) {
   return (
-    <div className="mb-8">
-      <h1 className="text-3xl font-semibold text-slate-900">{title}</h1>
-      <p className="mt-2 max-w-2xl text-slate-600">{description}</p>
-    </div>
+    <section className="mb-8 max-w-2xl">
+      <h1 className="text-3xl font-semibold text-foreground sm:text-4xl">
+        {title}
+      </h1>
+      {(subtitle || description) && (
+        <p className="mt-3 text-base leading-7 text-muted-foreground">
+          {subtitle ?? description}
+        </p>
+      )}
+    </section>
   );
 }
 

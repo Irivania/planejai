@@ -1,13 +1,13 @@
-import { Outlet } from 'react-router-dom';
+import { ThemeProvider } from './context/theme/ThemeProvider'
+import { router } from './router'
+import { RouterProvider } from 'react-router-dom'
 
-import RootLayout from '@/components/layout/RootLayout';
-
-function App() {
+export function App() {
   return (
-    <RootLayout>
-      <Outlet />
-    </RootLayout>
-  );
+    <ThemeProvider>
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  )
 }
 
-export default App;
+export default App

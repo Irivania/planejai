@@ -1,27 +1,53 @@
-import { useEffect, useState } from 'react';
+import { type SimulationFormData } from '@/data/simulation'
+import type { InsightData } from '@/services/aiService'
 
-export function useSimulationStorage<T>(key: string, initialValue: T) {
-  const [value, setValue] = useState<T>(() => {
-    if (typeof window === 'undefined') {
-      return initialValue;
+const LOCAL_STORAGE_KEY = 'simulation-data'
+
+export type SimulationRecord = SimulationFormData & {
+  id: string
+  insight?: InsightData
+}
+
+export const useSimulationStorage = () => {
+  const saveFormData = (formData: SimulationFormData): string => {
+    const id = crypto.randomUUID()
+    const record: SimulationRecord = { ...formData, id }
+
+    const storage = localStorage.getItem(LOCAL_STORAGE_KEY)
+    const savedData = storage
+      ? (JSON.parse(storage) as SimulationRecord[])
+      : []
+
+    localStorage.setItem(
+      LOCAL_STORAGE_KEY,
+      JSON.stringify([...savedData, record]),
+    )
+
+    return id
+  }
+
+  const getFormData = (id: string): SimulationRecord | null => {
+    const storage = localStorage.getItem(LOCAL_STORAGE_KEY)
+    if (!storage) {
+      return null
     }
 
-    const stored = window.localStorage.getItem(key);
+    const savedData = JSON.parse(storage) as SimulationRecord[]
+    return savedData.find((record) => record.id === id) || null
+  }
 
-    if (!stored) {
-      return initialValue;
-    }
+  const updateSimulation = (id: string, data: SimulationRecord) => {
+    const storage = localStorage.getItem(LOCAL_STORAGE_KEY)
+    const savedData = storage
+      ? (JSON.parse(storage) as SimulationRecord[])
+      : []
 
-    try {
-      return JSON.parse(stored) as T;
-    } catch {
-      return initialValue;
-    }
-  });
+    const updated = savedData.map((record) =>
+      record.id === id ? { ...data } : record,
+    )
 
-  useEffect(() => {
-    window.localStorage.setItem(key, JSON.stringify(value));
-  }, [key, value]);
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated))
+  }
 
-  return [value, setValue] as const;
+  return { saveFormData, getFormData, updateSimulation }
 }

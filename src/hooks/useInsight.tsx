@@ -1,35 +1,62 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { buildAIPrompt } from '@/data/aiPrompt'
+import { useSimulationStorage } from '@/hooks/useSimulationStorage'
+import { getInsight, type InsightData } from '@/services/aiService'
 
-import { buildAiPrompt } from '@/data/aiPrompt';
-import { getAiInsight } from '@/services/aiService';
+export const useInsight = (id: string) => {
+  const isRequestPending = useRef(false)
+  const { getFormData, updateSimulation } = useSimulationStorage()
 
-export function useInsight(simulation: Record<string, unknown>) {
-  const [data, setData] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [insight, setInsight] = useState<InsightData | null>(() => {
+    const simulation = getFormData(id)
+    return simulation?.insight ?? null
+  })
 
-  useEffect(() => {
-    if (!simulation) {
-      return;
-    }
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-    const run = async () => {
-      setLoading(true);
-      setError(null);
+  const fetchInsight = useCallback(
+    async (simulationId: string) => {
+      const simulation = getFormData(simulationId)
+
+      if (!simulation) {
+        setError('Simulação não encontrada.')
+        return
+      }
+
+      isRequestPending.current = true
+      setIsLoading(true)
+      setError(null)
 
       try {
-        const prompt = buildAiPrompt(simulation);
-        const result = await getAiInsight(prompt);
-        setData(result?.insight ?? null);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Erro inesperado.');
+        const prompt = buildAIPrompt(simulation)
+        const data = await getInsight(prompt)
+        
+        setInsight(data)
+        updateSimulation(simulationId, { ...simulation, insight: data })
+        
+        return data
+      } catch {
+        setError('Erro ao gerar o diagnóstico. Tente novamente.')
       } finally {
-        setLoading(false);
+        isRequestPending.current = false
+        setIsLoading(false)
       }
-    };
+    },
+    [getFormData, updateSimulation],
+  )
 
-    run();
-  }, [simulation]);
+  useEffect(() => {
+    if (insight || isLoading || isRequestPending.current || error) {
+      return
+    }
 
-  return { data, loading, error };
+    fetchInsight(id).then((data) => {
+      isRequestPending.current = false
+      if (!data) return
+      setInsight(data)
+    })
+  }, [id, insight, isLoading, error, fetchInsight])
+
+  return { insight, isLoading, error, fetchInsight }
 }

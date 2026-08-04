@@ -1,8 +1,12 @@
-import { createContext } from 'react';
+import { createContext } from 'react'
 
-type ThemeContextValue = {
-  theme: 'light' | 'dark';
-  toggleTheme: () => void;
-};
+export type Theme = 'light' | 'dark'
 
-export const ThemeContext = createContext<ThemeContextValue | null>(null);
+interface ThemeContextValue {
+  theme: Theme
+  toggleTheme: () => void
+}
+
+export const ThemeContext = createContext<ThemeContextValue | undefined>(
+  undefined,
+)
