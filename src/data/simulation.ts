@@ -1,4 +1,5 @@
-import type { FormStepProps } from '../components/features/Simulation/FormStep/index';
+import type { FormStepProps } from '../components/features/Simulation/FormStep/index'
+import type { InsightData } from '@/services/aiService'
 import {
   CalendarClock,
   CreditCard,
@@ -6,7 +7,15 @@ import {
   Landmark,
   PiggyBank,
   Wallet,
-} from 'lucide-react';
+} from 'lucide-react'
+
+// Interface da mensagem individual do chat
+export interface ChatMessage {
+  id: string
+  role: 'user' | 'assistant'
+  content: string
+  timestamp: string
+}
 
 export const simulationFormSteps = [
   {
@@ -70,7 +79,7 @@ export const simulationFormSteps = [
     id: 'goalDeadline',
     icon: CalendarClock,
     title: 'Prazo desejado',
-    question: 'Em quantos meses você planeja atingir esse objetivo?',
+    question: 'Em quantos meses você planja atingir esse objetivo?',
     inputProps: {
       type: 'number',
       placeholder: 'ex: 12',
@@ -83,9 +92,24 @@ export const simulationFormSteps = [
       emojiIcon: '✨',
     },
   },
-] satisfies FormStepProps[];
+] satisfies FormStepProps[]
 
-export type SimulationFormData = Record<
-  (typeof simulationFormSteps)[number]['id'],
-  string
->;
+export type SimulationFormStepId =
+  (typeof simulationFormSteps)[number]['id']
+
+// Mapeamento dos campos do formulário
+export interface SimulationFormData {
+  income: string
+  expenses: string
+  debts: string
+  goalName: string
+  goalAmount: string
+  goalDeadline: string
+}
+
+// Tipagem completa da simulação com id, insights e histórico do chat
+export interface SimulationRecord extends SimulationFormData {
+  id: string
+  insight?: InsightData
+  chatHistory?: ChatMessage[]
+}

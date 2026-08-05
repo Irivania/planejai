@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 
 type Theme = 'light' | 'dark'
 
@@ -17,11 +17,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const root = document.documentElement
-    if (theme === 'dark') {
-      root.classList.add('dark')
-    } else {
-      root.classList.remove('dark')
-    }
+    
+    // Atualiza o atributo data-theme conforme configurado no seu theme.css
+    root.setAttribute('data-theme', theme)
+    
     localStorage.setItem('theme', theme)
   }, [theme])
 
@@ -34,6 +33,15 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       {children}
     </ThemeContext.Provider>
   )
+}
+
+// Hook personalizado para facilitar o consumo do tema nos componentes
+export function useTheme() {
+  const context = useContext(ThemeContext)
+  if (!context) {
+    throw new Error('useTheme deve ser usado dentro de um ThemeProvider')
+  }
+  return context
 }
 
 export default ThemeProvider

@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 import { useParams } from 'react-router-dom'
 import { Insights } from '@/components/features/Insights'
+import { AIInsightCard } from '@/components/features/Simulation/AIInsightCard'
 import { Card } from '@/components/features/SimulationResults/Card'
 import { PageHero } from '@/components/shared/PageHero'
 import { useSimulationStorage } from '@/hooks/useSimulationStorage'
@@ -40,6 +41,7 @@ export function SimulationResultsPage() {
         subtitle="Com base no seu perfil financeiro e objetivos."
       />
 
+      {/* Cards Superiores */}
       <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
         <Card
           icon={Goal}
@@ -62,12 +64,14 @@ export function SimulationResultsPage() {
         />
       </div>
 
+      {/* Grid com Insights e Resumo do Perfil */}
       <div className="grid gap-6 lg:grid-cols-3">
-        {/* Painel de Insights Integrado com a IA */}
+        {/* Painel de Insights do Gemini */}
         <div className="order-2 lg:order-1 lg:col-span-2">
           <Insights data={data} />
         </div>
 
+        {/* Resumo de Renda, Custos e Dívidas */}
         <div className="order-1 flex flex-col gap-6 lg:order-2">
           <Card
             icon={Wallet}
@@ -89,6 +93,11 @@ export function SimulationResultsPage() {
           />
         </div>
       </div>
+
+      {/* 💡 Desafio 2: Educador Financeiro AI (Chat Interativo) */}
+      <section className="mt-8">
+        <AIInsightCard simulation={data} />
+      </section>
     </main>
   )
 }

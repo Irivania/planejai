@@ -1,4 +1,4 @@
-import type { SimulationFormData } from '@/data/simulation'
+import type { SimulationFormData, SimulationRecord } from '@/data/simulation'
 import { parseCurrency } from '@/utils/currency'
 
 interface GeminiResponse {
@@ -10,8 +10,8 @@ interface GeminiResponse {
 }
 
 const API_KEY = String(import.meta.env.VITE_GEMINI_API_KEY)
-// Nome exato aceito pelo endpoint v1beta
-const MODEL_NAME = 'gemini-1.5-flash-latest'
+
+const MODEL_NAME = 'gemini-flash-latest'
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`
 
 const callGeminiAPI = async (prompt: string): Promise<GeminiResponse> => {
@@ -20,9 +20,6 @@ const callGeminiAPI = async (prompt: string): Promise<GeminiResponse> => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: {
-        responseMimeType: 'application/json',
-      },
     }),
   })
 
@@ -54,11 +51,15 @@ export const getInsight = async (prompt: string): Promise<InsightData> => {
     throw new Error('Nenhum resultado retornado da IA.')
   }
 
-  const rawText = response.candidates[0].content.parts[0].text
-  return JSON.parse(rawText) as InsightData
+  let jsonText = response.candidates[0].content.parts[0].text
+
+  // Limpa possíveis blocos ```json ... ``` retornados pela IA antes do parse
+  jsonText = jsonText.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim()
+
+  return JSON.parse(jsonText) as InsightData
 }
 
-// Fallback de Diagnóstico Financeiro Local caso a API atinja limites
+// Fallback de Diagnóstico Financeiro Local
 function generateLocalFallbackInsight(data: SimulationFormData): InsightData {
   const income = parseCurrency(data.income)
   const expenses = parseCurrency(data.expenses)
@@ -134,30 +135,15 @@ Você é um consultor financeiro especialista. Analise estes dados:
 - Custo total da Meta: R$ ${goalAmount}
 - Prazo para atingir a meta: ${goalDeadline} meses
 
-Retorne um objeto JSON contendo exatamente esta estrutura de chaves:
+Retorne um objeto JSON sem formatação Markdown com a seguinte estrutura:
 {
-  "feasibility": {
-    "status": "viable",
-    "content": "Análise sobre se a meta é viável ou não no prazo informado."
-  },
-  "diagnosis": {
-    "content": "Diagnóstico sobre o nível de comprometimento da renda atual."
-  },
-  "suggestions": {
-    "items": ["Sugestão 1", "Sugestão 2"]
-  },
-  "extraIncome": {
-    "items": ["Ideia 1 de renda extra", "Ideia 2 de renda extra"]
-  },
-  "investment": {
-    "items": ["Opção de investimento alinhada ao prazo"]
-  },
-  "motivation": {
-    "content": "Mensagem motivacional curta."
-  }
+  "feasibility": { "status": "viable", "content": "..." },
+  "diagnosis": { "content": "..." },
+  "suggestions": { "items": ["..."] },
+  "extraIncome": { "items": ["..."] },
+  "investment": { "items": ["..."] },
+  "motivation": { "content": "..." }
 }
-
-Importante: No campo "status" de "feasibility", escolha apenas um destes 3 valores exatos: "viable", "needs_adjustment" ou "unfeasible".
   `.trim()
 
   try {
@@ -165,5 +151,58 @@ Importante: No campo "status" de "feasibility", escolha apenas um destes 3 valor
   } catch (error) {
     console.warn('Utilizando diagnóstico local de fallback:', error)
     return generateLocalFallbackInsight(data)
+  }
+}
+
+// 💡 DESAFIO 2: Respostas em texto corrido para o Educador Financeiro AI
+export const askFinancialEducator = async (
+  question: string,
+  simulation: SimulationRecord,
+  previousHistory: { role: 'user' | 'assistant'; content: string }[] = [],
+): Promise<string> => {
+  const income = parseCurrency(simulation.income)
+  const expenses = parseCurrency(simulation.expenses)
+  const debts = parseCurrency(simulation.debts)
+  const goalAmount = parseCurrency(simulation.goalAmount)
+
+  const conversation = previousHistory
+    .map((msg) => `${msg.role === 'user' ? 'Usuário' : 'Educador'}: ${msg.content}`)
+    .join('\n')
+
+  const prompt = `
+Você é um educador financeiro amigável, didático e especialista do aplicativo Planej.ai.
+O usuário fez uma simulação com os seguintes dados:
+- Meta: ${simulation.goalName}
+- Valor total da meta: R$ ${goalAmount}
+- Prazo: ${simulation.goalDeadline} meses
+- Renda Mensal: R$ ${income}
+- Custos Fixos: R$ ${expenses}
+- Dívidas/Parcelas: R$ ${debts}
+
+Histórico da conversa:
+${conversation}
+
+Pergunta do usuário: "${question}"
+
+Responda diretamente em texto claro e acolhedor (pode usar tópicos ou até 3 parágrafos curtos). Seja prático e forneça dicas alinhadas ao contexto financeiro dele.
+  `.trim()
+
+  try {
+    const response = await callGeminiAPI(prompt)
+
+    if (!response.candidates || response.candidates.length === 0) {
+      throw new Error('Nenhum resultado retornado da IA.')
+    }
+
+    return response.candidates[0].content.parts[0].text
+  } catch (error) {
+    console.error('Erro na resposta do educador financeiro:', error)
+
+    // Trata estouro de cota (429) e fornece uma resposta amigável em vez de quebrar a tela
+    if (String(error).includes('429')) {
+      return 'Atingimos o limite temporário de consultas gratuitas da IA por minuto. Por favor, aguarde cerca de 30 segundos e tente perguntar novamente!'
+    }
+
+    throw error
   }
 }

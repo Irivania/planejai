@@ -1,15 +1,19 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { buildAIPrompt } from '@/data/aiPrompt'
 import { useSimulationStorage } from '@/hooks/useSimulationStorage'
-import { getInsight, type InsightData } from '@/services/aiService'
+import { getSimulationInsight, type InsightData } from '@/services/aiService'
 
 export const useInsight = (id: string) => {
   const isRequestPending = useRef(false)
   const { getFormData, updateSimulation } = useSimulationStorage()
 
+  // Inicializa o estado lendo do localStorage se já existir
   const [insight, setInsight] = useState<InsightData | null>(() => {
     const simulation = getFormData(id)
-    return simulation?.insight ?? null
+    if (simulation?.insight) {
+      return simulation.insight
+    }
+    return null
   })
 
   const [isLoading, setIsLoading] = useState(false)
@@ -30,11 +34,15 @@ export const useInsight = (id: string) => {
 
       try {
         const prompt = buildAIPrompt(simulation)
-        const data = await getInsight(prompt)
-        
+        const data = await getSimulationInsight(simulation)
+
+        // Salva o resultado no localStorage junto com a simulação
+        updateSimulation(simulationId, {
+          ...simulation,
+          insight: data,
+        })
+
         setInsight(data)
-        updateSimulation(simulationId, { ...simulation, insight: data })
-        
         return data
       } catch {
         setError('Erro ao gerar o diagnóstico. Tente novamente.')
@@ -47,6 +55,7 @@ export const useInsight = (id: string) => {
   )
 
   useEffect(() => {
+    // Trava de segurança: impede requisições duplicadas ou loops infinitos
     if (insight || isLoading || isRequestPending.current || error) {
       return
     }
