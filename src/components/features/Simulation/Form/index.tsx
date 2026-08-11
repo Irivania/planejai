@@ -18,13 +18,15 @@ export const SimulationForm = () => {
   const isFirstStep = currentStepIndex === 0
   const isLastStep = currentStepIndex === totalSteps - 1
 
-  const currentValue = formData[currentStep.id] ?? ''
+  // Correção do erro TS(7053): type assertion na chave do SimulationFormData
+  const currentStepKey = currentStep.id as keyof SimulationFormData
+  const currentValue = formData[currentStepKey] ?? ''
   const isValid = currentValue.trim().length > 0 && currentValue !== '0'
 
   const handleValueChange = (value: string) => {
     setFormData((prev) => ({
       ...prev,
-      [currentStep.id]: value,
+      [currentStepKey]: value,
     }))
   }
 

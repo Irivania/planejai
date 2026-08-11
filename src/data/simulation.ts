@@ -79,7 +79,7 @@ export const simulationFormSteps = [
     id: 'goalDeadline',
     icon: CalendarClock,
     title: 'Prazo desejado',
-    question: 'Em quantos meses você planja atingir esse objetivo?',
+    question: 'Em quantos meses você planeja atingir esse objetivo?',
     inputProps: {
       type: 'number',
       placeholder: 'ex: 12',
