@@ -66,5 +66,19 @@ Bash
 pnpm dev
 Acesse a aplicação no navegador em http://localhost:5173.
 
-🧪 Como Testar e Rodar a Validação1. Testes Automatizados (Unitários)O projeto conta com suítes de testes unitários desenvolvidas com Vitest para garantir a estabilidade dos cálculos financeiros e de viabilidade de metas.Para rodar os testes, execute:Bashpnpm vitest
-2. Testar o Fluxo Principal no NavegadorCriar uma Simulação: Na página inicial, preencha a Renda Mensal, Custos Fixos, Dívidas, Nome da Meta, Custo e Prazo. Clique em Gerar simulação ✨.Visualizar Diagnóstico: Confira os cards com o cálculo da economia mensal recomendada e os insights gerados pela IA.Interagir com o Educador Financeiro: Na seção de chat, envie perguntas sobre o orçamento e observe o histórico e o scroll automático funcionando.Testar Persistência: Recarregue a página (F5) para verificar que os dados continuam salvos no navegador.📸 Demonstração da Aplicação📑 Formulário de Simulação (Passo a Passo)Renda MensalCusto FixoInput de RendaInput de CustosDívidas e ParcelasObjetivoInput de DívidasNome da MetaValor do ObjetivoPrazo DesejadoCusto TotalMeses/Anos📊 Resultado da Simulação & Educador Financeiro AITema Claro & Tema Escuro: Interface totalmente adaptada e responsiva.📚 O que Aprendi Durante o DesafioIntegração com APIs de LLM: Compreendi como integrar a API do Google Gemini consumindo endpoints REST de forma assíncrona.Engenharia de Prompt: Aprendi a estruturar prompts no front-end enviando dados de contexto (histórico da conversa + dados do orçamento do usuário) para obter respostas precisas e didáticas.Testes Automatizados (TDD/Unitários): Aprimorei a validação de regras de negócio utilizando Vitest para garantir a robustez dos algoritmos financeiros.Tipagem Avançada em TypeScript: Aprimorei o uso de interfaces e types para representar estados complexos, como histórico de chat aninhado em registros de simulação.Gerenciamento de Estado e Refs no React: Utilizei o hook useRef para controlar a rolagem do container de chat (scrollToBottom) e manipulei os estados locais para garantir atualizações em tempo real sem travamentos.
+🧪 Como Testar e Rodar a Validação
+1. Testes Automatizados (Unitários)O projeto conta com suítes de testes unitários desenvolvidas com Vitest para garantir a estabilidade dos cálculos financeiros e de viabilidade de metas.Para rodar os testes, execute:Bashpnpm vitest
+2. Testar o Fluxo Principal no Navegador
+3. Criar uma Simulação: Na página inicial, preencha a Renda Mensal, Custos Fixos, Dívidas, Nome da Meta, Custo e Prazo.
+4. Clique em Gerar simulação ✨.
+5. Visualizar Diagnóstico: Confira os cards com o cálculo da economia mensal recomendada e os insights gerados pela IA.
+6. Interagir com o Educador Financeiro: Na seção de chat, envie perguntas sobre o orçamento e observe o histórico e o scroll automático funcionando.
+7. Testar Persistência: Recarregue a página (F5) para verificar que os dados continuam salvos no navegador.
+8. 📸 Demonstração da Aplicação
+9. 📑 Formulário de Simulação (Passo a Passo)Renda MensalCusto FixoInput de RendaInput de CustosDívidas e ParcelasObjetivoInput de DívidasNome da MetaValor do ObjetivoPrazo DesejadoCusto TotalMeses/Anos
+10. 📊 Resultado da Simulação & Educador Financeiro AITema Claro & Tema Escuro: Interface totalmente adaptada e responsiva.
+11. 📚 O que Aprendi Durante o DesafioIntegração com APIs de LLM: Compreendi como integrar a API do Google Gemini consumindo endpoints REST de forma assíncrona.
+12. Engenharia de Prompt: Aprendi a estruturar prompts no front-end enviando dados de contexto (histórico da conversa + dados do orçamento do usuário) para obter respostas precisas e didáticas.
+13. Testes Automatizados (TDD/Unitários): Aprimorei a validação de regras de negócio utilizando Vitest para garantir a robustez dos algoritmos financeiros.
+14. Tipagem Avançada em TypeScript: Aprimorei o uso de interfaces e types para representar estados complexos, como histórico de chat aninhado em registros de simulação.Gerenciamento de Estado e Refs no React:
+15. Utilizei o hook useRef para controlar a rolagem do container de chat (scrollToBottom) e manipulei os estados locais para garantir atualizações em tempo real sem travamentos.
