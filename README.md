@@ -1,60 +1,70 @@
 # 🚀 Planej.ai — Planejador Financeiro Inteligente
 
-O **Planej.ai** é uma aplicação web desenvolvida para auxiliar usuários na organização das finanças pessoais e no planejamento de metas financeiras de curto, médio e longo prazo. 
+O **Planej.ai** é uma aplicação web desenvolvida para auxiliar usuários na organização das finanças pessoais e no planejamento de metas financeiras de curto, médio e longo prazo.
 
 A aplicação permite realizar simulações financeiras, calcular a economia mensal necessária para alcançar uma determinada meta e receber insights personalizados por meio de uma integração com inteligência artificial. O projeto também conta com um **Educador Financeiro AI**, um chat contextual que utiliza os dados da simulação para responder dúvidas relacionadas ao planejamento financeiro.
 
-📚 *Contexto do projeto:* Desenvolvido como desafio prático para aplicação dos conhecimentos adquiridos em desenvolvimento web, React, TypeScript, integração com APIs de IA e testes automatizados.
+📚 _Contexto do projeto:_ Desenvolvido como desafio prático para aplicação dos conhecimentos adquiridos em desenvolvimento web, React, TypeScript, integração com APIs de IA e testes automatizados.
 
 ---
 
 ## 🎯 Funcionalidades
 
 ### 💰 Simulação de Metas
+
 O usuário pode informar:
-* Renda mensal
-* Custos fixos
-* Dívidas e parcelas
-* Nome da meta
-* Valor desejado
-* Prazo para alcançar o objetivo
+
+- Renda mensal
+- Custos fixos
+- Dívidas e parcelas
+- Nome da meta
+- Valor desejado
+- Prazo para alcançar o objetivo
 
 A aplicação utiliza essas informações para realizar uma análise da situação financeira e calcular a economia mensal necessária para atingir a meta.
 
 ### 📊 Diagnóstico Financeiro
+
 Após a simulação, o sistema apresenta informações como:
-* Economia mensal recomendada
-* Análise da viabilidade da meta
-* Informações sobre o orçamento
-* Insights personalizados
+
+- Economia mensal recomendada
+- Análise da viabilidade da meta
+- Informações sobre o orçamento
+- Insights personalizados
 
 ### 🤖 Insights com Inteligência Artificial
+
 O Planej.ai utiliza a **Google Gemini API** (`gemini-flash-latest`) para gerar análises contextualizadas a partir dos dados financeiros informados pelo usuário. A IA apresenta sugestões sobre organização do orçamento, redução de gastos, estratégias para alcançar objetivos e possibilidades de aumento de renda.
-> *Observação: os conteúdos gerados pela IA possuem finalidade educacional e informativa e não substituem orientação de um profissional financeiro.*
+
+> _Observação: os conteúdos gerados pela IA possuem finalidade educacional e informativa e não substituem orientação de um profissional financeiro._
 
 ### 💬 Educador Financeiro AI
+
 O projeto possui um chat interativo que permite ao usuário fazer perguntas relacionadas à própria simulação. O contexto da conversa considera as informações financeiras para tornar as respostas mais relevantes.
 
 ### 💾 Histórico de Simulações
+
 As simulações e conversas são armazenadas localmente utilizando `localStorage`, permitindo consultar os dados posteriormente no mesmo navegador.
 
 ### ⚠️ Fallback Local
+
 Caso ocorra uma falha na integração com a API de IA, a aplicação possui um mecanismo de fallback para manter o diagnóstico financeiro local disponível de forma segura.
 
 ### 📱 Interface Responsiva
+
 A interface foi desenvolvida para se adaptar a diferentes tamanhos de tela (desktop, tablet e dispositivos móveis), contando também com suporte aos temas **claro** e **escuro**.
 
 ---
 
 ## 🛠️ Tecnologias Utilizadas
 
-* **Frontend:** React 18, TypeScript, Vite
-* **Estilização:** Tailwind CSS, Lucide React (ícones)
-* **Roteamento:** React Router DOM
-* **Inteligência Artificial:** Google Gemini API (`gemini-flash-latest`)
-* **Testes Automatizados:** Vitest
-* **Armazenamento:** `localStorage`
-* **Gerenciador de Pacotes:** `pnpm`
+- **Frontend:** React 18, TypeScript, Vite
+- **Estilização:** Tailwind CSS, Lucide React (ícones)
+- **Roteamento:** React Router DOM
+- **Inteligência Artificial:** Google Gemini API (`gemini-flash-latest`)
+- **Testes Automatizados:** Vitest
+- **Armazenamento:** `localStorage`
+- **Gerenciador de Pacotes:** `pnpm`
 
 ---
 
@@ -62,7 +72,7 @@ A interface foi desenvolvida para se adaptar a diferentes tamanhos de tela (desk
 
 Durante a evolução do projeto, foi desenvolvido o **Educador Financeiro AI**, adicionando uma experiência de conversa contextual à aplicação:
 
-1. **💬 Chat Contextual:** O usuário pode realizar perguntas relacionadas à sua simulação financeira (ex: *"Como posso economizar para alcançar essa meta mais rapidamente?"*).
+1. **💬 Chat Contextual:** O usuário pode realizar perguntas relacionadas à sua simulação financeira (ex: _"Como posso economizar para alcançar essa meta mais rapidamente?"_).
 2. **💾 Persistência das Conversas:** O histórico de perguntas e respostas é armazenado no `localStorage`, associado à respectiva simulação.
 3. **📜 Rolagem Automática:** O chat possui rolagem automática para acompanhar novas mensagens enviadas e respostas recebidas.
 4. **⏳ Tratamento de Estados:** Adicionados estados visuais para carregamento da resposta da IA, processamento de requisição e erros.
@@ -75,6 +85,7 @@ Durante a evolução do projeto, foi desenvolvido o **Educador Financeiro AI**, 
 O projeto utiliza **Vitest** para testar regras de negócio relacionadas aos cálculos financeiros e às previsões das metas.
 
 Para executar os testes no terminal:
+
 ```bash
 pnpm vitest
 
@@ -143,3 +154,22 @@ Estudante de Gestão da Tecnologia da Informação, com interesse em desenvolvim
 📄 Licença
 Este projeto foi desenvolvido para fins educacionais e de portfólio.
 
+
+🧪 Como Testar e Rodar a Validação
+1. Testes Automatizados (Unitários)O projeto conta com suítes de testes unitários desenvolvidas com Vitest para garantir a estabilidade dos cálculos financeiros e de viabilidade de metas.Para rodar os testes, execute:Bashpnpm vitest
+2. Testar o Fluxo Principal no Navegador
+3. Criar uma Simulação: Na página inicial, preencha a Renda Mensal, Custos Fixos, Dívidas, Nome da Meta, Custo e Prazo.
+4. Clique em Gerar simulação ✨.
+5. Visualizar Diagnóstico: Confira os cards com o cálculo da economia mensal recomendada e os insights gerados pela IA.
+6. Interagir com o Educador Financeiro: Na seção de chat, envie perguntas sobre o orçamento e observe o histórico e o scroll automático funcionando.
+7. Testar Persistência: Recarregue a página (F5) para verificar que os dados continuam salvos no navegador.
+8. 📸 Demonstração da Aplicação
+9. 📑 Formulário de Simulação (Passo a Passo)Renda MensalCusto FixoInput de RendaInput de CustosDívidas e ParcelasObjetivoInput de DívidasNome da MetaValor do ObjetivoPrazo DesejadoCusto TotalMeses/Anos
+10. 📊 Resultado da Simulação & Educador Financeiro AITema Claro & Tema Escuro: Interface totalmente adaptada e responsiva.
+11. 📚 O que Aprendi Durante o DesafioIntegração com APIs de LLM: Compreendi como integrar a API do Google Gemini consumindo endpoints REST de forma assíncrona.
+12. Engenharia de Prompt: Aprendi a estruturar prompts no front-end enviando dados de contexto (histórico da conversa + dados do orçamento do usuário) para obter respostas precisas e didáticas.
+13. Testes Automatizados (TDD/Unitários): Aprimorei a validação de regras de negócio utilizando Vitest para garantir a robustez dos algoritmos financeiros.
+14. Tipagem Avançada em TypeScript: Aprimorei o uso de interfaces e types para representar estados complexos, como histórico de chat aninhado em registros de simulação.Gerenciamento de Estado e Refs no React:
+15. Utilizei o hook useRef para controlar a rolagem do container de chat (scrollToBottom) e manipulei os estados locais para garantir atualizações em tempo real sem travamentos.
+>>>>>>> 97a42814241b82a3928d73209d64c2a83530627c
+```
